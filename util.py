@@ -3,6 +3,7 @@
 import argparse
 import sys
 import re
+from colorama import init, Back, Style
 
 def parse_cli_args(args): 
 	'''
@@ -101,17 +102,29 @@ def main(args):
 	ipv4_re = re.compile(r"(([01]?[0-9][0-9]?|2[0-4][0-9]|25[0-5])\.){3}([01]?[0-9][0-9]?|2[0-4][0-9]|25[0-5])")
 	ipv6_re = re.compile(r"([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}")
 	
+	# True if lines in the intersection will contain IP addresses that must be highlighted
+	#IPs_included = args.ipv4 or args.ipv6
+	if args.ipv4 or args.ipv6: 
+		init()
+	IP_match = None
+	
 	# Print each line in the intersection of the given arguments
 	for line in lines[boundaries[0]:boundaries[1]]: 
 		if args.timestamps:
 			if not timestamp_re.search(line):
 				continue
 		if args.ipv4:
-			if not ipv4_re.search(line):
+			IP_match = ipv4_re.search(line)
+			if not IP_match:
 				continue
 		if args.ipv6:
-			if not ipv6_re.search(line):
+			IP_match = ipv6_re.search(line)
+			if not IP_match:
 				continue
+		
+		if IP_match: 
+			line = line[:IP_match.span()[0]] + Back.GREEN + line[IP_match.span()[0]:IP_match.span()[1]] + Style.RESET_ALL + line[IP_match.span()[1]:]
+		
 		print(line,end="")
 
 
