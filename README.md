@@ -1,6 +1,8 @@
 # Log Parsing Utility
 
-This is a CLI application that helps you parse logs of various kinds. It prints the lines of a given log according to filters set by command line arguments. With the exception of colorama for highlighting IP addresses, the implementation for this uses only Python's standard library. 
+This is a CLI application that helps you parse logs of various kinds. It prints the lines of a given log according to filters set by command line arguments. The input log can be given as a command line argument or read from standard input. 
+
+With the exception of colorama for highlighting IP addresses, the implementation for this uses only Python's standard library. 
 
 In the future, I hope to better optimize this tool and improve upon its IPv6 detection. Presently, logParserUtility is only capable of detecting IPv6 addresses in standard form that haven't been shortened with double colons, and I'd like to improve upon this. 
 
@@ -16,9 +18,13 @@ logParserUtility/
 - tests.py
 - util.py
 
-util.py -- the application
-
-tests.py -- the test suite for the application
+| Item | Description |
+| ------------- | ------------- |
+| LICENSE | an MIT license |
+| requirements.txt | text file outlining dependencies |
+| testLogs | directory for logs used by tests in tests.py |
+| tests.py | the test suite for the application |
+| util.py | the application |
 
 ## How to install and run
 
