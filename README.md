@@ -7,17 +7,18 @@ In the future, I hope to better optimize this tool and improve upon its IPv6 det
 ## Structure and contents
 
 logParserUtility/
-|-- .gitignore
-|-- LICENSE
-|-- README.md
-|-- requirements.txt
-|-- testLogs/
-|   |-- various logs for testing
-|-- tests.py
-|-- util.py
+- .gitignore
+- LICENSE
+- README.md
+- requirements.txt
+- testLogs/
+- - various logs for testing
+- tests.py
+- util.py
 
 util.py -- the application
-tests.py -- test suite for the application
+
+tests.py -- the test suite for the application
 
 ## How to install and run
 
@@ -27,9 +28,10 @@ This application has one dependency, colorama. You can either install it directl
 
 A shebang is included in `util.py` to allow for execution without explicitly calling `python`. Usage follows: 
 
-./util.py \[-h\] \[-f NUM\] \[-l NUM\] \[-t\] \[-i\] \[-I\] \[FILE\]
+`./util.py \[-h\] \[-f NUM\] \[-l NUM\] \[-t\] \[-i\] \[-I\] \[FILE\]`
 
 | Argument | Description |
+| ------------- | ------------- |
 | -h, --help | show this help message and exit |
 | -f NUM, --first NUM | print first NUM lines |
 | -l NUM, --last NUM | print last NUM lines |
@@ -42,28 +44,15 @@ All arguments are optional, but the result is the intersection of the arguments'
 
 ## Usage examples
 
-./util.py -h
-<prints help>
-
-cat test_0.log | ./util.py --first 10
-<prints the first 10 lines of test_0.log>
-
-./util.py -l 5 test_1.log
-<prints the last 5 lines of test_1.log>
-
-./utils.py --timestamps test_2.log
-<prints any lines from test_2.log that contain a timestamp>
-
-./util.py --ipv4 test_3.log
-<prints any lines from test_3.log that contain an IPv4 address>
-
-./util.py --ipv6 test_4.log
-<prints any lines from test_4.log that contain an IPv6 address>
-
-./util.py --ipv4 --last 50 test_5.log
-<prints any of the last 50 lines from test_5.log that contain an IPv4
-address>
-
+| Example | Outcome |
+| ------------- | ------------- |
+| ./util.py -h | \<prints help\> |
+| cat test_0.log \| ./util.py --first 10 | \<prints the first 10 lines of test_0.log\> |
+| ./util.py -l 5 test_1.log | \<prints the last 5 lines of test_1.log\> |
+| ./utils.py --timestamps test_2.log | \<prints any lines from test_2.log that contain a timestamp\> |
+| ./util.py --ipv4 test_3.log | \<prints any lines from test_3.log that contain an IPv4 address\> |
+| ./util.py --ipv6 test_4.log | \<prints any lines from test_4.log that contain an IPv6 address\> |
+| ./util.py --ipv4 --last 50 test_5.log | \<prints any of the last 50 lines from test_5.log that contain an IPv4 address\> |
 
 ## Testing
 
