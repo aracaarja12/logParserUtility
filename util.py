@@ -4,6 +4,7 @@ import argparse
 import sys
 import re
 from colorama import init, Back, Style
+from operator import itemgetter
 
 def parse_cli_args(args): 
 	'''
@@ -82,6 +83,41 @@ def displaymatch(match):
 	print("<Match %r, groups=%r>" % (match.group(),match.groups()))
 '''
 
+def splitByIdx(line, indices): 
+	front = 0
+	back = indices[0]
+	yield line[front:back]
+	front = back
+	for back in indices[1:]: 
+		yield line[front:back]
+		front = back
+	yield line[front:]
+
+def highlightIPs(line, matches): 
+	# split line into a list
+	indices = []
+	startsWithIP = False
+	for match in matches: 
+		for i in match.span(): 
+			if i == 0: 
+				startsWithIP = True
+			elif i not in indices and i != len(line): 
+				indices.append(i)
+	segments = [*splitByIdx(line,indices)]
+	
+	# color list elements that are IPs
+	startingPosition = 0 if startsWithIP else 1
+	for i in range(startingPosition,len(segments),2): 
+		segments[i] = Back.GREEN + segments[i] + Style.RESET_ALL
+	
+	# combine list into one string and return
+	return "".join(segments)
+
+def testhighlight(): 
+	s = "up what's up doc up doc up up up"
+	iter = re.compile("up").finditer(s)
+	print(highlightIPs(s,iter))
+
 def main(args): 
 	'''
 	Driver function
@@ -114,19 +150,23 @@ def main(args):
 			if not timestamp_re.search(line):
 				continue
 		if args.ipv4:
-			IP_match = ipv4_re.search(line)
+			IP_match = [*ipv4_re.finditer(line)]
 			if not IP_match:
 				continue
+			line = highlightIPs(line, IP_match)
 		if args.ipv6:
-			IP_match = ipv6_re.search(line)
+			#IP_match = ipv6_re.search(line)
+			IP_match = [*ipv6_re.finditer(line)]
 			if not IP_match:
 				continue
+			line = highlightIPs(line, IP_match)
 		
-		if IP_match: 
-			line = line[:IP_match.span()[0]] + Back.GREEN + line[IP_match.span()[0]:IP_match.span()[1]] + Style.RESET_ALL + line[IP_match.span()[1]:]
+		#if IP_match: 
+			#line = line[:IP_match.span()[0]] + Back.GREEN + line[IP_match.span()[0]:IP_match.span()[1]] + Style.RESET_ALL + line[IP_match.span()[1]:]
 		
 		print(line,end="")
 
 
 if __name__ == "__main__": 
 	main(sys.argv[1:])
+	#testhighlight()
