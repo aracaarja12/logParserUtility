@@ -1,10 +1,10 @@
 # Log Parsing Utility
 
-This is a CLI application that helps you parse logs of various kinds. It prints the lines of a given log according to filters set by command line arguments. The input log can be given as a command line argument or read from standard input. 
+This is a CLI application that helps you parse logs of various kinds. It prints the lines of a given log according to filters set by user-supplied command line arguments. The input log can be given as a command line argument or read from standard input. 
 
 With the exception of colorama for highlighting IP addresses, the implementation for this uses only Python's standard library. 
 
-In the future, I hope to better optimize this tool and improve upon its IPv6 detection. Presently, logParserUtility is only capable of detecting IPv6 addresses in standard form that haven't been shortened with double colons, and I'd like to improve upon this. 
+Presently, logParserUtility detects IPv6 addresses in standard form that haven't been shortened with double colons. In the future, I hope to better optimize this tool and improve upon its IPv6 detection by adding to the relevant regex pattern. 
 
 ## Structure and contents
 
@@ -39,8 +39,8 @@ A shebang is included in `util.py` to allow for execution without explicitly cal
 | Argument | Description |
 | ------------- | ------------- |
 | -h, --help | show this help message and exit |
-| -f NUM, --first NUM | print first NUM lines |
-| -l NUM, --last NUM | print last NUM lines |
+| -f NUM, --first NUM | print the first NUM lines (a negative NUM value prints from the back) |
+| -l NUM, --last NUM | print the last NUM lines (a negative NUM value is treated as though it were positive) |
 | -t, --timestamps | print lines that contain a timestamp in HH:MM:SS format |
 | -i, --ipv4 | print lines that contain an IPv4 address, matching IPs are highlighted |
 | -I, --ipv6 | print lines that contain an IPv6 address (standard notation), matching IPs are highlighted |

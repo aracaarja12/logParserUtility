@@ -62,7 +62,7 @@ def calculateBounds(first, last, length):
 	elif first is None and last is not None: # if only -l is given
 		# boundaries = [length-l,length]
 		boundaries[0] = length - last
-	else: # if both -l and -f are given... 
+	elif first is not None and last is not None: # if both -l and -f are given... 
 		if first + last > length: # and there is an intersection
 			# boundaries = [length - last, first]
 			boundaries[0] = length - last 
