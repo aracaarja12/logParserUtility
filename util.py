@@ -123,7 +123,7 @@ def main(args):
 	
 	# Find the intersection of the --first and --last arguments, return if there is no intersection
 	boundaries = calculateBounds(args.first,args.last,len(lines))
-	if boundaries is None: 
+	if boundaries is None or boundaries in [[0,0],[len(lines),len(lines)]]: 
 		return
 	
 	# Compile regex strings into regex pattern objects
