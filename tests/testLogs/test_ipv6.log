@@ -1,0 +1,10 @@
+Line 1 cc13:467e:88db:a4b0:fc68:dd9d:5a9e:ab80 valid
+Line 2 cc13:467e:88db:a4b0:fc68:dd9d:5a9e invalid
+CF91:B4ED:13FB:1857:6B32:CB99:54E8:82BC Line 3 valid
+Line 4 cc13:467e:88db:a4b0:fc68:dd9d:5a9e:ab80invalid
+Line 5 valid Cf91:B4Ed:13Fb:1857:6B32:cB99:54e8:82Bc
+Line 6cc13:467e:88db:a4b0:fc68:dd9d:5a9e:ab80 invalid
+Line 7 valid 2bc2:2a2d:98:dc3:0:18e0:aa7c:c0bd
+Line 8 invalid cc13:467e:88db:a4b0000:fc68:dd9d:5a9e:ab80
+Line 9 valid FFFF:FFFF:FFFF:FFFF:FFFF:FFFF:FFFF:FFFF
+Line 10 invalid cc13:467e:88dG:a4b0:fc68:dd9d:5a9e:ab80

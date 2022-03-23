@@ -1,0 +1,10 @@
+Line 1 192.168.255.0 valid
+Line 2 192.260.255.0 invalid
+86.115.8.11 Line 3 valid
+Line 4 234.98.125.251invalid
+Line 5 valid 234.098.125.251
+Line 6234.98.125.251 invalid
+Line 7 valid 0.0.0.0
+Line 8 invalid 43.119.240.-72
+Line 9 valid 255.255.255.255
+Line 10 invalid 331.101.157

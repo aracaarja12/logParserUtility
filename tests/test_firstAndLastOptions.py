@@ -18,18 +18,18 @@ def getExpectedLines(idx):
 	Returns expected text based on a list of lines that should be printed
 	'''
 	
-	logText = [
+	logText = (
 		"This is line 1/10\n",
 		"This is line 2/10\n",
 		"This is line 3/10\n",
 		"This is line 4/10\n",
-		"This is line 5/10 04:06:15\n",
+		"This is line 5/10\n",
 		"This is line 6/10\n",
 		"This is line 7/10\n",
 		"This is line 8/10\n",
 		"This is line 9/10\n",
 		"This is line 10/10"
-	]
+	)
 	return "".join([logText[i] for i in idx if i < len(logText)  and i >= 0])
 
 def getExpectedValuesForNoValueGiven(arg): 
@@ -143,18 +143,6 @@ def test_firstAndLastWithOverlap(capsys, first, last, expectedIdx):
 	util.main(args)
 	captured = capsys.readouterr()
 	expected = getExpectedLines(expectedIdx)
-	assert captured.out == expected
-	assert captured.err == ""
-
-def test_NoFirstOrLast(capsys): 
-	'''
-	Verifies that the absence of -f and -l does not prevent other options from producing output
-	'''
-	
-	args = ["-t","testLogs/test_firstAndLastOptions.log"]
-	util.main(args)
-	captured = capsys.readouterr()
-	expected = getExpectedLines([4])
 	assert captured.out == expected
 	assert captured.err == ""
 

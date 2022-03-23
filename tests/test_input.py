@@ -1,6 +1,8 @@
 import pytest
+import os
 import re
 import subprocess
+from pathlib import PurePath
 
 '''
 Fixtures containing expected values of the form (stdout, stderr, returncode)
@@ -26,7 +28,7 @@ def expectedValuesReadingFromStdin():
 def expectedValuesForInvalidFile(): 
 	return (
 		"",
-		"usage: util.py [-h] [-f NUM] [-l NUM] [-t] [-i] [-I] [FILE]\nutil.py: error: argument FILE: can't open 'testLogs\\invalid.log': [Errno 2] No such file or directory: 'testLogs\\\\invalid.log'\n", 
+		"usage: util.py [-h] [-f NUM] [-l NUM] [-t] [-i] [-I] [FILE]\nutil.py: error: argument FILE: can't open 'invalid.log': [Errno 2] No such file or directory: 'invalid.log'\n", 
 		2
 	)
 
@@ -64,13 +66,18 @@ def getArgs(key):
 	Function fetches arguments for util.py from a dictionary
 	'''
 	
+	util = PurePath("../util.py")
+	logFromArg = PurePath("testLogs/test_input_fromArg.log")
+	logFromStdin = PurePath("testLogs/test_input_fromStdin.log")
+	printCmd = "type" if os.name == "nt" else "cat"
+	
 	args = {
-		"validArgNoPipe" : ["..\\util.py", "-f", "5", "testLogs\\test_input_fromArg.log"], 
-		"validArgWithPipe" : ["type", "testLogs\\test_input_fromStdin.log", "|", "..\\util.py", "-f", "5", "testLogs\\test_input_fromArg.log"],  
-		"invalidArgNoPipe" : ["..\\util.py", "testLogs\\invalid.log"], 
-		"invalidArgWithPipe" : ["type", "testLogs\\test_input_fromStdin.log", "|", "..\\util.py", "testLogs\\invalid.log"], 
-		"noArgNoPipe" : ["..\\util.py"], 
-		"noArgWithPipe" : ["type", "testLogs\\test_input_fromStdin.log", "|", "..\\util.py", "-f", "5"]
+		"validArgNoPipe" : [util, "-f", "5", logFromArg], 
+		"validArgWithPipe" : [printCmd, logFromStdin, "|", util, "-f", "5", logFromArg],  
+		"invalidArgNoPipe" : [util, "invalid.log"], 
+		"invalidArgWithPipe" : [printCmd, logFromStdin, "|", util, "invalid.log"], 
+		"noArgNoPipe" : [util], 
+		"noArgWithPipe" : [printCmd, logFromStdin, "|", util, "-f", "5"]
 	}
 	return args[key]
 

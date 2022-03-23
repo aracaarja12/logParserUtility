@@ -1,0 +1,10 @@
+Line 1 04:06:15 valid
+Line 2 4:06:15 invalid
+14:59:06 Line 3 valid
+Line 4 14:70:06 invalid
+Line 5 valid 18:30:24
+Line 6 20:30 invalid
+Line 7 valid 23:59:59
+Line 8 invalid 20:04:100
+Line 9 valid 00:00:00
+Line 10 invalid00:04:10
