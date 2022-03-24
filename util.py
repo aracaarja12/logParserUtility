@@ -3,6 +3,7 @@
 import argparse
 import sys
 import re
+from pathlib import PurePath
 from colorama import init, Back, Style
 
 def parse_cli_args(args): 
