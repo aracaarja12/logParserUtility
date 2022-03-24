@@ -138,6 +138,18 @@ def test_ipv6Only(capsys, ipv6Log, switch):
 	assert captured.out == expected
 	assert captured.err == ""
 
+def test_timestampAndIpv4(): 
+	pass
+
+def test_timestampAndIpv6(): 
+	pass
+
+def test_ipv4AndIpv6(): 
+	pass
+
+def test_timestampAndIpv4AndIpv6(): 
+	pass
+
 '''
 Negative tests
 '''

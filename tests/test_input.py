@@ -28,6 +28,10 @@ def logFromStdin():
 def invalidLog(): 
 	return "invalid.log"
 
+@pytest.fixture
+def utilScript(): 
+	return str(PurePath("../util.py"))
+
 '''
 Fixtures that return expected values of the form (stdout, stderr)
 '''
@@ -46,15 +50,6 @@ def expectedValuesReadingFromStdin():
 		""
 	)
 
-'''
-@pytest.fixture
-def expectedValuesForInvalidFile(): 
-	return (
-		"",
-		"usage: util.py [-h] [-f NUM] [-l NUM] [-t] [-i] [-I] [FILE]\nutil.py: error: argument FILE: can't open 'invalid.log': [Errno 2] No such file or directory: 'invalid.log'\n"
-	)
-'''
-
 @pytest.fixture
 def expectedValuesForInvalidFile(invalidLog): 
 	scriptName = PurePath(sys.argv[0]).parts[-1]
@@ -63,15 +58,14 @@ def expectedValuesForInvalidFile(invalidLog):
 		f"usage: {scriptName} [-h] [-f NUM] [-l NUM] [-t] [-i] [-I] [FILE]\n{scriptName}: error: argument FILE: can't open '{invalidLog}': [Errno 2] No such file or directory: '{invalidLog}'\n"
 	)
 
-'''
 @pytest.fixture
 def expectedValuesForNoInput(): 
 	return (
 		"", 
 		"usage: util.py [-h] [-f NUM] [-l NUM] [-t] [-i] [-I] [FILE]\nutil.py: error: A file or standard input must be provided\n"
 	)
-'''
 
+'''
 @pytest.fixture
 def expectedValuesForNoInput(): 
 	scriptName = PurePath(sys.argv[0]).parts[-1]
@@ -79,6 +73,7 @@ def expectedValuesForNoInput():
 		"",
 		f"usage: {scriptName} [-h] [-f NUM] [-l NUM] [-t] [-i] [-I] [FILE]\n{scriptName}: error: A file or standard input must be provided\n"
 	)
+'''
 
 '''
 Helper functions
@@ -123,46 +118,7 @@ def runUtil(args):
 	return (out, err)
 
 '''
-def getArgs(key): 
-	#Function fetches arguments for util.py from a dictionary
-	
-	util = PurePath("../util.py")
-	logFromArg = PurePath("testLogs/test_input_fromArg.log")
-	logFromStdin = PurePath("testLogs/test_input_fromStdin.log")
-	printCmd = "type" if os.name == "nt" else "cat"
-	
-	args = {
-		"validArgNoPipe" : ["-f", "5", logFromArg], 
-		"validArgWithPipe" : [printCmd, logFromStdin, "|", util, "-f", "5", logFromArg],  
-		"invalidArgNoPipe" : [util, "invalid.log"], 
-		"invalidArgWithPipe" : [printCmd, logFromStdin, "|", util, "invalid.log"], 
-		"noArgNoPipe" : [util], 
-		"noArgWithPipe" : [printCmd, logFromStdin, "|", util, "-f", "5"]
-	}
-	return args[key]
-'''
-
-'''
 Positive tests
-'''
-
-'''
-@pytest.mark.parametrize("args", 
-	[
-		getArgs("validArgNoPipe"),
-		getArgs("validArgWithPipe")
-	]
-)
-def test_providingValidFileAsArgumentAlwaysReadsFromThatFile(args, expectedValuesReadingFromArg): 
-	#Tests reading in a log based on the positional argument FILE
-	#Also verifies that util.py defaults to FILE if both a valid FILE and stdin are provided
-	
-	expected_stdout, expected_stderr, expected_returncode = expectedValuesReadingFromArg
-	#actual_stdout, actual_stderr, actual_returncode = runUtil(args)
-	actual_stdout, actual_stderr = runUtil(args)
-	assert actual_stdout == expected_stdout
-	assert actual_stderr == expected_stderr
-	#assert actual_returncode == expected_returncode
 '''
 
 def test_validArgNoStdin(capsys, logFromArg, expectedValuesReadingFromArg): 
@@ -182,18 +138,6 @@ def test_validArgWithStdin(capsys, monkeypatch, logFromArg, expectedValuesReadin
 	assert captured.out == expected_stdout
 	assert captured.err == expected_stderr
 
-'''
-def test_readingFromStdin(expectedValuesReadingFromStdin): 
-	#Tests reading in a log from stdin
-	
-	expected_stdout, expected_stderr, expected_returncode = expectedValuesReadingFromStdin
-	#actual_stdout, actual_stderr, actual_returncode = runUtil(getArgs("noArgWithPipe"))
-	actual_stdout, actual_stderr = runUtil(getArgs("noArgWithPipe"))
-	assert actual_stdout == expected_stdout
-	assert actual_stderr == expected_stderr
-	#assert actual_returncode == expected_returncode
-'''
-
 def test_noArgWithStdin(capsys, monkeypatch, expectedValuesReadingFromStdin): 
 	monkeypatch.setattr(sys, "stdin", io.StringIO(expectedValuesReadingFromStdin[0]))
 	args = ["-f","5"]
@@ -204,34 +148,7 @@ def test_noArgWithStdin(capsys, monkeypatch, expectedValuesReadingFromStdin):
 	assert captured.err == expected_stderr
 
 '''
-def test_monkey(monkeypatch, capsys): 
-	monkeypatch.setattr(sys, "stdin", io.StringIO('from stdin'))
-	util.main(["-f","5"])
-	captured = capsys.readouterr()
-	assert captured.out == "from stdin"
-	assert captured.err == ""
-'''
-
-'''
 Negative tests
-'''
-
-'''
-@pytest.mark.parametrize("args", 
-	[
-		getArgs("invalidArgNoPipe"),
-		getArgs("invalidArgWithPipe")
-	]
-)
-def test_errorHandlingForInvalidFileAsArgument(args, expectedValuesForInvalidFile): 
-	#Tests error handling when an invalid FILE argument is given
-	
-	expected_stdout, expected_stderr, expected_returncode = expectedValuesForInvalidFile
-	#actual_stdout, actual_stderr, actual_returncode = runUtil(args)
-	actual_stdout, actual_stderr = runUtil(args)
-	assert actual_stdout == expected_stdout
-	assert actual_stderr == expected_stderr
-	#assert actual_returncode == expected_returncode
 '''
 
 def test_invalidArgNoStdin(capsys, invalidLog, expectedValuesForInvalidFile): 
@@ -253,31 +170,22 @@ def test_invalidArgWithStdin(capsys, monkeypatch, invalidLog, expectedValuesRead
 	assert captured.out == expected_stdout
 	assert captured.err == expected_stderr
 
-'''
-def test_errorHandlingForNoInputLogProvided(expectedValuesForNoInput): 
-	#Tests error handling when neither FILE nor stdin are provided
-	
-	expected_stdout, expected_stderr, expected_returncode = expectedValuesForNoInput
-	#actual_stdout, actual_stderr, actual_returncode = runUtil(getArgs("noArgNoPipe"))
-	actual_stdout, actual_stderr = runUtil(getArgs("noArgNoPipe"))
+def test_noArgNoStdin(utilScript, expectedValuesForNoInput): 
+	actual_stdout, actual_stderr = runUtil([utilScript])
+	expected_stdout, expected_stderr = expectedValuesForNoInput
 	assert actual_stdout == expected_stdout
 	assert actual_stderr == expected_stderr
-	#assert actual_returncode == expected_returncode
-'''
 
-def test_noArgNoStdin(expectedValuesForNoInput): 
-	'''
+'''
+@pytest.mark.xfail
+def test_noArgNoStdin(capsys, expectedValuesForNoInput): 
 	args = ["-f","5"]
-	with pytest.raises(SystemExit): 
-		util.main(args)
+	util.parse_cli_args(args)
 	captured = capsys.readouterr()
 	expected_stdout, expected_stderr = expectedValuesForNoInput
 	assert captured.out == expected_stdout
 	assert captured.err == expected_stderr
-	'''
-	args = ["-f","5"]
-	with pytest.raises(SystemExit): 
-		util.main(args)
+'''
 
 
 ############ TODO cleanup below
