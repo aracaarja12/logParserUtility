@@ -2,7 +2,6 @@ import pytest
 import sys
 import os
 from pathlib import PurePath
-import subprocess
 
 current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)
@@ -15,7 +14,7 @@ Fixtures
 '''
 
 @pytest.fixture
-def timestampLog(): 
+def timestamp_log(): 
 	'''
 	Returns the text of testLogs/test_timestamp.log
 	'''
@@ -34,7 +33,7 @@ def timestampLog():
 	)
 
 @pytest.fixture
-def ipv4Log(): 
+def ipv4_log(): 
 	'''
 	Returns the text of testLogs/test_ipv4.log
 	'''
@@ -53,7 +52,7 @@ def ipv4Log():
 	)
 
 @pytest.fixture
-def ipv6Log(): 
+def ipv6_log(): 
 	'''
 	Returns the text of testLogs/test_ipv6.log
 	'''
@@ -75,97 +74,97 @@ def ipv6Log():
 Helpers
 '''
 
-def getExpectedLines(logText,idx): 
+def get_expected_lines(log_text, idx): 
 	'''
 	Returns expected text from the given log based on a list of lines that should be printed
 	'''
 	
-	return "".join([logText[i] for i in idx if i < len(logText)  and i >= 0])
+	return "".join([log_text[i] for i in idx if i < len(log_text)  and i >= 0])
 
-def getExpectedValuesForErroneousArgs(extraArg): 
+def get_expected_values_for_erroneous_args(extra_arg): 
 	'''
 	Returns values of the form (stdout, stderr) for when an argument is erroneously supplied to -t, -i, or -I
 	'''
 	
-	scriptName = PurePath(sys.argv[0]).parts[-1]
+	script_name = PurePath(sys.argv[0]).parts[-1]
 	return (
 		"",
-		f"usage: {scriptName} [-h] [-f NUM] [-l NUM] [-t] [-i] [-I] [FILE]\n{scriptName}: error: unrecognized arguments: {extraArg}\n"
+		f"usage: {script_name} [-h] [-f NUM] [-l NUM] [-t] [-i] [-I] [FILE]\n{script_name}: error: unrecognized arguments: {extra_arg}\n"
 	)
 
 '''
 Positive tests
 '''
 
-@pytest.mark.parametrize("switch", ["-t","--timestamp"])
-def test_timestampOnly(capsys, timestampLog, switch): 
+@pytest.mark.parametrize("switch", ["-t", "--timestamp"])
+def test_timestamp_only(capsys, timestamp_log, switch): 
 	'''
 	Tests -t independently with a log containing valid and invalid timestamps (valid timestamps are of the form HH:MM:SS)
 	'''
 	
-	args = [switch,"testLogs/test_timestamp.log"]
+	args = [switch, "testLogs/test_timestamp.log"]
 	util.main(args)
 	captured = capsys.readouterr()
-	expected = getExpectedLines(timestampLog,[i for i in range(0,10,2)])
+	expected = get_expected_lines(timestamp_log, [i for i in range(0, 10, 2)])
 	assert captured.out == expected
 	assert captured.err == ""
 
-@pytest.mark.parametrize("switch", ["-i","--ipv4"])
-def test_ipv4Only(capsys, ipv4Log, switch): 
+@pytest.mark.parametrize("switch", ["-i", "--ipv4"])
+def test_ipv4_only(capsys, ipv4_log, switch): 
 	'''
 	Tests -i independently with a log containing valid and invalid IPv4 addresses (valid IPs are of the form xxx.xxx.xxx.xxx where xxx is in (0,255))
 	Note: this does not verify IP highlighting
 	'''
 	
-	args = [switch,"testLogs/test_ipv4.log"]
+	args = [switch, "testLogs/test_ipv4.log"]
 	util.main(args)
 	captured = capsys.readouterr()
-	expected = getExpectedLines(ipv4Log,[i for i in range(0,10,2)])
+	expected = get_expected_lines(ipv4_log, [i for i in range(0, 10, 2)])
 	assert captured.out == expected
 	assert captured.err == ""
 
-@pytest.mark.parametrize("switch", ["-I","--ipv6"])
-def test_ipv6Only(capsys, ipv6Log, switch): 
+@pytest.mark.parametrize("switch", ["-I", "--ipv6"])
+def test_ipv6_only(capsys, ipv6_log, switch): 
 	'''
 	Tests -I independently with a log containing valid and invalid IPv6 addresses (valid IPs are of the form yyyy:yyyy:yyyy:yyyy:yyyy:yyyy:yyyy:yyyy where y is in hex (0-F))
 	Note: this does not verify IP highlighting
 	'''
 	
-	args = [switch,"testLogs/test_ipv6.log"]
+	args = [switch, "testLogs/test_ipv6.log"]
 	util.main(args)
 	captured = capsys.readouterr()
-	expected = getExpectedLines(ipv6Log,[i for i in range(0,10,2)])
+	expected = get_expected_lines(ipv6_log, [i for i in range(0, 10, 2)])
 	assert captured.out == expected
 	assert captured.err == ""
 
-def test_timestampAndIpv4(): 
+def test_timestamp_and_ipv4(): 
 	pass
 
-def test_timestampAndIpv6(): 
+def test_timestamp_and_ipv6(): 
 	pass
 
-def test_ipv4AndIpv6(): 
+def test_ipv4_and_ipv6(): 
 	pass
 
-def test_timestampAndIpv4AndIpv6(): 
+def test_timestamp_and_ipv4_and_ipv6(): 
 	pass
 
 '''
 Negative tests
 '''
 
-@pytest.mark.parametrize("option", ["-t","-i","-I"])
-def test_timestampAndIPOptionsDoNotTakeArgs(capsys, option): 
+@pytest.mark.parametrize("option", ["-t", "-i", "-I"])
+def test_timestamp_and_ip_options_do_not_take_args(capsys, option): 
 	'''
 	Tests error handling when user tries to supply an argument to -t, -i, or -I
 	'''
 	
-	extraArg = 5
-	args = ["testLogs/test_timestamp.log",option,str(extraArg)]
+	extra_arg = 5
+	args = ["testLogs/test_timestamp.log", option, str(extra_arg)]
 	with pytest.raises(SystemExit): 
 		util.main(args)
 	captured = capsys.readouterr()
-	expected_stdout, expected_stderr = getExpectedValuesForErroneousArgs(extraArg)
+	expected_stdout, expected_stderr = get_expected_values_for_erroneous_args(extra_arg)
 	assert captured.out == expected_stdout
 	assert captured.err == expected_stderr
 

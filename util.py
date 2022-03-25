@@ -32,7 +32,7 @@ def parse_cli_args(args):
 	
 	return args
 
-def calculateBounds(first, last, length): 
+def calculate_bounds(first, last, length): 
 	'''
 	Function to calculate the intersection of the --first and --last arguments
 	Lines of the log that don't fall within this intersection will never be printed
@@ -40,7 +40,7 @@ def calculateBounds(first, last, length):
 	'''
 	
 	# Assume the entire file will fall within the intersection
-	boundaries = [0,length]
+	boundaries = [0, length]
 	if first is not None: 
 		# Correct values of --first to support negative indexing, prevent errors, and mimic the head utility
 		if first < 0-length: 
@@ -58,10 +58,10 @@ def calculateBounds(first, last, length):
 	
 	# Edit the intersection... 
 	if first is not None and last is None: # if only -f is given
-		# boundaries = [0,f]
+		# boundaries = [0, f]
 		boundaries[1] = first
 	elif first is None and last is not None: # if only -l is given
-		# boundaries = [length-l,length]
+		# boundaries = [length-l, length]
 		boundaries[0] = length - last
 	elif first is not None and last is not None: # if both -l and -f are given... 
 		if first + last > length: # and there is an intersection
@@ -73,7 +73,7 @@ def calculateBounds(first, last, length):
 	
 	return boundaries
 
-def splitByIdx(line, indices): 
+def split_by_idx(line, indices): 
 	'''
 	Generator that splits a string by a list of indices
 	'''
@@ -87,7 +87,7 @@ def splitByIdx(line, indices):
 		front = back
 	yield line[front:]
 
-def highlightIPs(line, matches): 
+def highlight_ip_addresses(line, matches): 
 	'''
 	Function to add highlighting to a string given a list of re.Match objects
 	Returns the altered string
@@ -95,18 +95,18 @@ def highlightIPs(line, matches):
 	
 	# Split line into a list based on the given regex matches
 	indices = []
-	startsWithIP = False
+	starts_with_ip = False
 	for match in matches: 
 		for i in match.span(): 
 			if i == 0: 
-				startsWithIP = True
+				starts_with_ip = True
 			elif i not in indices and i != len(line): 
 				indices.append(i)
-	segments = [*splitByIdx(line,indices)]
+	segments = [*split_by_idx(line, indices)]
 	
 	# Color list elements that are IPs
-	startingPosition = 0 if startsWithIP else 1
-	for i in range(startingPosition,len(segments),2): 
+	starting_position = 0 if starts_with_ip else 1
+	for i in range(starting_position, len(segments), 2): 
 		segments[i] = Back.GREEN + segments[i] + Style.RESET_ALL
 	
 	# Combine list into one string and return
@@ -123,8 +123,8 @@ def main(args):
 	args.file.close()
 	
 	# Find the intersection of the --first and --last arguments, return if there is no intersection
-	boundaries = calculateBounds(args.first,args.last,len(lines))
-	if boundaries is None or boundaries in [[0,0],[len(lines),len(lines)]]: 
+	boundaries = calculate_bounds(args.first, args.last, len(lines))
+	if boundaries is None or boundaries in [[0,0], [len(lines),len(lines)]]: 
 		return
 	
 	# Compile regex strings into regex pattern objects
@@ -146,12 +146,12 @@ def main(args):
 			IP_match = [*ipv4_re.finditer(line)]
 			if not IP_match:
 				continue
-			line = highlightIPs(line, IP_match)
+			line = highlight_ip_addresses(line, IP_match)
 		if args.ipv6:
 			IP_match = [*ipv6_re.finditer(line)]
 			if not IP_match:
 				continue
-			line = highlightIPs(line, IP_match)
+			line = highlight_ip_addresses(line, IP_match)
 		
 		print(line,end="")
 
