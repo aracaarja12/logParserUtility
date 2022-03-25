@@ -8,3 +8,4 @@ Line 7 valid 2bc2:2a2d:98:dc3:0:18e0:aa7c:c0bd
 Line 8 invalid cc13:467e:88db:a4b0000:fc68:dd9d:5a9e:ab80
 Line 9 valid FFFF:FFFF:FFFF:FFFF:FFFF:FFFF:FFFF:FFFF
 Line 10 invalid cc13:467e:88dG:a4b0:fc68:dd9d:5a9e:ab80
+2bc2:2a2d:98:dc3:0:18e0:aa7c:c0bd cc13:467e:88db:a4b0:fc68:dd9d:5a9e:ab80 0000:0000:0000:0000:0000:0000:0000:0000
