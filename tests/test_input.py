@@ -83,10 +83,6 @@ class TestPositive:
 class TestNegative: 
 
     @pytest.fixture(scope="class")
-    def script_name(self): 
-        return PurePath(sys.argv[0]).parts[-1]
-
-    @pytest.fixture(scope="class")
     def invalid_log(self): 
         return "invalid.log"
 
@@ -152,3 +148,5 @@ class TestNegative:
         expected_stdout, expected_stderr = expected_values_for_no_input
         assert captured.out == expected_stdout
         assert captured.err == expected_stderr
+
+    # TODO add negative test for no args error
