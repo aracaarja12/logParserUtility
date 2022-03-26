@@ -2,7 +2,6 @@ import pytest
 import sys
 import os
 import io
-import re
 
 current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)
@@ -42,7 +41,7 @@ class TestPositive:
     @pytest.fixture(scope="class")
     def expected_values_reading_from_arg(self): 
         '''
-        Returns expected (stdin, stdout) when reading the log given as an 
+        Returns expected (stdout, stderr) when reading the log given as an 
             argument
         '''
     
@@ -51,6 +50,31 @@ class TestPositive:
                 "This is line 1 Reading from argument\n192.168.255.0 This is "
                 "line 2 1762:0:0:0:0:B03:1:AF18\nThis is line 3 12:24:59\n"
                 "This is line 4 256.256.256.0\nThis is line 5 172.16.254.1"
+            ), 
+            ""
+        )
+    
+    @pytest.fixture(scope="class")
+    def expected_values_help_option(self, script_name): 
+        '''
+        Returns expected (stdout, stderr) when the -h switch is passed
+        '''
+        
+        return (
+            (
+                f"usage: {script_name} [-h] [-f NUM] [-l NUM] [-t] [-i] [-I] "
+                "[FILE]\n\nCLI application to help you parse logs of various "
+                "kinds\n\npositional arguments:\n  FILE                 log "
+                "file to be parsed\n\noptions:\n  -h, --help           show "
+                "this help message and exit\n  -f NUM, --first NUM  print "
+                "first NUM lines\n  -l NUM, --last NUM   print last NUM lines"
+                "\n  -t, --timestamps     print lines that contain a "
+                "timestamp in HH:MM:SS format\n  -i, --ipv4           print "
+                "lines that contain an IPv4 address, matching "
+                "IPs\n                       are highlighted\n  -I, "
+                "--ipv6           print lines that contain an IPv6 address "
+                "(standard\n                       notation), matching IPs "
+                "are highlighted\n"
             ), 
             ""
         )
@@ -105,6 +129,22 @@ class TestPositive:
         assert captured.err == expected_stderr
 
     # TODO add test for help
+    @pytest.mark.functional
+    @pytest.mark.parametrize("switch", ["-h", "--help"])
+    def test_help(self, capsys, switch, expected_values_help_option): 
+        '''
+        Tests the help option
+        Verifies that -h displays help and exits regardless of other
+            options used
+        '''
+        
+        args = [switch, "-f", "5", "-t", "-I", log_from_arg]
+        with pytest.raises(SystemExit): 
+            util.main(args)
+        captured = capsys.readouterr()
+        expected_stdout, expected_stderr = expected_values_help_option
+        assert captured.out == expected_stdout
+        assert captured.err == expected_stderr
 
 class TestNegative: 
     
@@ -138,6 +178,22 @@ class TestNegative:
                 f"usage: {script_name} [-h] [-f NUM] [-l NUM] [-t] [-i] [-I] "
                 f"[FILE]\n{script_name}: error: A file or standard input must "
                 "be provided. Try -h for help.\n"
+            )
+        )
+    
+    @pytest.fixture(scope="class")
+    def expected_values_for_no_filters_provided(self, script_name): 
+        '''
+        Returns expected (stdout, stderr) when there is valid input data
+            but no other arguments
+        '''
+        
+        return (
+            "",
+            (
+                f"usage: {script_name} [-h] [-f NUM] [-l NUM] [-t] [-i] [-I] "
+                f"[FILE]\n{script_name}: error: At least one argument must be "
+                "supplied as a filter. Try -h for help.\n"
             )
         )
     
@@ -191,4 +247,19 @@ class TestNegative:
         assert captured.out == expected_stdout
         assert captured.err == expected_stderr
 
-    # TODO add negative test for no args error
+    @pytest.mark.functional
+    def test_valid_input_but_no_other_args(
+            self, capsys, expected_values_for_no_filters_provided): 
+        '''
+        Tests error handling when no filters are provided as arguments
+        '''
+        
+        args = [log_from_arg]
+        with pytest.raises(SystemExit): 
+            util.main(args)
+        captured = capsys.readouterr()
+        expected_stdout, expected_stderr = (
+            expected_values_for_no_filters_provided
+        )
+        assert captured.out == expected_stdout
+        assert captured.err == expected_stderr

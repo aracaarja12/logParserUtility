@@ -2,7 +2,6 @@ import pytest
 import sys
 import os
 import re
-from pathlib import PurePath
 
 current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)
