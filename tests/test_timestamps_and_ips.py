@@ -1,13 +1,15 @@
 import pytest
-import sys
-import os
+#import sys
+#import os
 import re
 
-current = os.path.dirname(os.path.realpath(__file__))
-parent = os.path.dirname(current)
-sys.path.append(parent)
+#current = os.path.dirname(os.path.realpath(__file__))
+#parent = os.path.dirname(current)
+#sys.path.append(parent)
 
-import util
+#import util
+
+from .. import util
 
 general_log = "testLogs/test_general.log"
 timestamp_log = "testLogs/test_timestamp.log"

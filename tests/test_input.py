@@ -1,13 +1,15 @@
 import pytest
 import sys
-import os
+#import os
 import io
 
-current = os.path.dirname(os.path.realpath(__file__))
-parent = os.path.dirname(current)
-sys.path.append(parent)
+#current = os.path.dirname(os.path.realpath(__file__))
+#parent = os.path.dirname(current)
+#sys.path.append(parent)
 
-import util
+#import util
+
+from .. import util
 
 log_from_arg = "testLogs/test_input_from_arg.log"
 invalid_log = "invalid.log"
