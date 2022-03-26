@@ -1,13 +1,4 @@
 import pytest
-#import sys
-#import os
-
-#current = os.path.dirname(os.path.realpath(__file__))
-#parent = os.path.dirname(current)
-#sys.path.append(parent)
-
-#import util
-
 from .. import util
 
 first_and_last_log = "testLogs/test_first_and_last_options.log"
