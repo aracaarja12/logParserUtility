@@ -14,13 +14,6 @@ import util
 Helpers
 '''
 
-'''
-def get_expected_lines(log_text, idx): 
-    #Returns expected text from the given log based on a list of lines that should be printed
-    
-    return "".join([log_text[i] for i in idx if i < len(log_text)  and i >= 0])
-'''
-
 def get_expected_values_for_erroneous_args(extra_arg): 
     '''
     Returns values of the form (stdout, stderr) for when an argument is erroneously supplied to -t, -i, or -I
