@@ -3,7 +3,6 @@
 import argparse
 import sys
 import re
-from pathlib import PurePath
 from colorama import init, Back, Style
 
 def has_stdin(): 

@@ -1,7 +1,6 @@
 import pytest
 import sys
 import os
-from pathlib import PurePath
 
 current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)
@@ -9,9 +8,7 @@ sys.path.append(parent)
 
 import util
 
-@pytest.fixture(scope="module")
-def first_and_last_log(): 
-    return "testLogs/test_first_and_last_options.log"
+first_and_last_log = "testLogs/test_first_and_last_options.log"
 
 class TestPositive: 
 
@@ -39,7 +36,7 @@ class TestPositive:
 
     @pytest.mark.functional
     @pytest.mark.parametrize("NUM", [0, 3, 10, 20])
-    def test_first_with_positive_values(self, capsys, NUM, first_and_last_log):
+    def test_first_with_positive_values(self, capsys, NUM):
         '''
         Tests -f NUM option with values >= 0
         Verifies the entire log is printed if NUM > len(log)
@@ -54,7 +51,7 @@ class TestPositive:
 
     @pytest.mark.functional
     @pytest.mark.parametrize("NUM", [-3, -10, -20])
-    def test_first_with_negative_values(self, capsys, NUM, first_and_last_log):
+    def test_first_with_negative_values(self, capsys, NUM):
         '''
         Tests -f NUM option with values < 0
         Verifies that NUM < 0 prints all but the last NUM lines
@@ -70,7 +67,7 @@ class TestPositive:
 
     @pytest.mark.functional
     @pytest.mark.parametrize("NUM", [0, 3, 10, 20])
-    def test_last_with_positive_values(self, capsys, NUM, first_and_last_log): 
+    def test_last_with_positive_values(self, capsys, NUM): 
         '''
         Tests -l NUM option with values >= 0
         Verifies that NUM > len(log) prints the entire log
@@ -85,7 +82,7 @@ class TestPositive:
 
     @pytest.mark.functional
     @pytest.mark.parametrize("NUM", [-3, -10, -20])
-    def test_last_with_negative_values(self, capsys, NUM, first_and_last_log): 
+    def test_last_with_negative_values(self, capsys, NUM): 
         '''
         Tests -l NUM option with values < 0
         Verifies that NUM < -len(log) prints the entire log
@@ -106,8 +103,7 @@ class TestPositive:
             ("-4", "4")
         ]
     )
-    def test_first_and_last_no_overlap(
-            self, capsys, first, last, first_and_last_log): 
+    def test_first_and_last_no_overlap(self, capsys, first, last): 
         '''
         Tests -f with -l when there is no intersection
         '''
@@ -127,7 +123,7 @@ class TestPositive:
         ]
     )
     def test_first_and_last_with_overlap(
-            self, capsys, first, last, expected_idx, first_and_last_log): 
+            self, capsys, first, last, expected_idx): 
         '''
         Tests -f and -l when there is an intersection
         '''
@@ -207,10 +203,6 @@ class TestPositive:
         length = 10
         assert util.calculate_bounds(None, None, length) == [0, length]
 
-'''
-Negative tests
-'''
-
 class TestNegative: 
 
     @staticmethod
@@ -251,9 +243,7 @@ class TestNegative:
             ("-l", "-l/--last")
         ]
     )
-    def test_no_value_given(
-            self, capsys, script_name, short_arg, long_arg, 
-            first_and_last_log): 
+    def test_no_value_given(self, capsys, script_name, short_arg, long_arg): 
         '''
         Tests error handling when no value is given to -f or -l
         '''
@@ -278,8 +268,7 @@ class TestNegative:
         ]
     )
     def test_invalid_value_given(
-            self, capsys, script_name, short_arg, long_arg, invalid_val, 
-            first_and_last_log): 
+            self, capsys, script_name, short_arg, long_arg, invalid_val): 
         '''
         Tests error handling when an invalid value is given to -f or -l
         '''
