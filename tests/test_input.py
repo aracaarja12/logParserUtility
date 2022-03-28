@@ -4,8 +4,8 @@ import io
 from .. import util
 
 
-log_from_arg = "testLogs/test_input_from_arg.log"
-invalid_log = "invalid.log"
+LOG_FROM_ARG = "testLogs/test_input_from_arg.log"
+INVALID_LOG = "invalid.log"
 
 
 @pytest.fixture(scope="module")
@@ -40,8 +40,8 @@ class TestPositive:
     @pytest.fixture(scope="class")
     def expected_values_reading_from_arg(self): 
         '''
-        Returns expected (stdout, stderr) when reading the log given as an 
-            argument
+        Returns expected (stdout, stderr) when reading the log given as
+            an argument
         '''
     
         return (
@@ -86,7 +86,7 @@ class TestPositive:
         '''
         
         monkeypatch.setattr(sys.stdin, "isatty", mock_stdin_isatty)
-        args = ["-f", "5", log_from_arg]
+        args = ["-f", "5", LOG_FROM_ARG]
         util.main(args)
         captured = capsys.readouterr()
         expected_stdout, expected_stderr = expected_values_reading_from_arg
@@ -104,7 +104,7 @@ class TestPositive:
         
         monkeypatch.setattr(
             sys, "stdin", io.StringIO(expected_values_reading_from_stdin[0]))
-        args = ["-f", "5", log_from_arg]
+        args = ["-f", "5", LOG_FROM_ARG]
         util.main(args)
         captured = capsys.readouterr()
         expected_stdout, expected_stderr = expected_values_reading_from_arg
@@ -127,7 +127,6 @@ class TestPositive:
         assert captured.out == expected_stdout
         assert captured.err == expected_stderr
 
-    # TODO add test for help
     @pytest.mark.functional
     @pytest.mark.parametrize("switch", ["-h", "--help"])
     def test_help(self, capsys, switch, expected_values_help_option): 
@@ -137,7 +136,7 @@ class TestPositive:
             options used
         '''
         
-        args = [switch, "-f", "5", "-t", "-I", log_from_arg]
+        args = [switch, "-f", "5", "-t", "-I", LOG_FROM_ARG]
         with pytest.raises(SystemExit): 
             util.main(args)
         captured = capsys.readouterr()
@@ -152,8 +151,8 @@ class TestNegative:
     @pytest.fixture(scope="class")
     def expected_values_for_invalid_file(self, script_name): 
         '''
-        Returns expected (stdout, stderr) when the file provided as an arg
-            cannot be opened
+        Returns expected (stdout, stderr) when the file provided as an
+            arg cannot be opened
         '''
     
         return (
@@ -161,16 +160,16 @@ class TestNegative:
             (
                 f"usage: {script_name} [-h] [-f NUM] [-l NUM] [-t] [-i] [-I] "
                 f"[FILE]\n{script_name}: error: argument FILE: can't open '"
-                f"{invalid_log}': [Errno 2] No such file or directory: '"
-                f"{invalid_log}'\n"
+                f"{INVALID_LOG}': [Errno 2] No such file or directory: '"
+                f"{INVALID_LOG}'\n"
             )
         )
 
     @pytest.fixture(scope="class")
     def expected_values_for_no_input(self, script_name): 
         '''
-        Returns expected (stdout, stderr) when neither a file nor a pipe are
-            provided
+        Returns expected (stdout, stderr) when neither a file nor a pipe
+            are provided
         '''
     
         return (
@@ -206,7 +205,7 @@ class TestNegative:
         '''
         
         monkeypatch.setattr(sys.stdin, "isatty", mock_stdin_isatty)
-        args = ["-f", "5", invalid_log]
+        args = ["-f", "5", INVALID_LOG]
         with pytest.raises(SystemExit): 
             util.main(args)
         captured = capsys.readouterr()
@@ -224,7 +223,7 @@ class TestNegative:
         
         monkeypatch.setattr(
             sys, "stdin", io.StringIO(expected_values_reading_from_stdin[0]))
-        args = ["-f", "5", invalid_log]
+        args = ["-f", "5", INVALID_LOG]
         with pytest.raises(SystemExit): 
             util.main(args)
         captured = capsys.readouterr()
@@ -255,7 +254,7 @@ class TestNegative:
         Tests error handling when no filters are provided as arguments
         '''
         
-        args = [log_from_arg]
+        args = [LOG_FROM_ARG]
         with pytest.raises(SystemExit): 
             util.main(args)
         captured = capsys.readouterr()

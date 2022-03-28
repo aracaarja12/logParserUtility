@@ -2,7 +2,7 @@ import pytest
 from .. import util
 
 
-first_and_last_log = "testLogs/test_first_and_last_options.log"
+FIRST_AND_LAST_LOG = "testLogs/test_first_and_last_options.log"
 
 
 class TestPositive: 
@@ -13,24 +13,10 @@ class TestPositive:
         '''
         Returns expected text based on a list of lines
         '''
-        '''
-        log_text = (
-            "This is line 1/10\n",
-            "This is line 2/10\n",
-            "This is line 3/10\n",
-            "This is line 4/10\n",
-            "This is line 5/10\n",
-            "This is line 6/10\n",
-            "This is line 7/10\n",
-            "This is line 8/10\n",
-            "This is line 9/10\n",
-            "This is line 10/10"
-        )
+        
         return "".join(
-            [log_text[i] for i in idx if i < len(log_text) and i >= 0]
+            [f"This is line {i+1}/10\n" for i in idx if 0 <= i < 10]
         )
-        '''
-        return "".join([f"This is line {i+1}/10\n" for i in idx if 0 <= i < 10])
 
     @pytest.mark.functional
     @pytest.mark.parametrize("NUM", [0, 3, 10, 20])
@@ -40,7 +26,7 @@ class TestPositive:
         Verifies the entire log is printed if NUM > len(log)
         '''
         
-        args = ["-f", str(NUM), first_and_last_log]
+        args = ["-f", str(NUM), FIRST_AND_LAST_LOG]
         util.main(args)
         captured = capsys.readouterr()
         expected = self.get_expected_lines([i for i in range(0,NUM)])
@@ -56,7 +42,7 @@ class TestPositive:
         Verifies that nothing prints if NUM < -len(log)
         '''
         
-        args = ["--first", str(NUM), first_and_last_log]
+        args = ["--first", str(NUM), FIRST_AND_LAST_LOG]
         util.main(args)
         captured = capsys.readouterr()
         expected = self.get_expected_lines([i for i in range(0,10+NUM)])
@@ -71,7 +57,7 @@ class TestPositive:
         Verifies that NUM > len(log) prints the entire log
         '''
         
-        args = ["-l", str(NUM), first_and_last_log]
+        args = ["-l", str(NUM), FIRST_AND_LAST_LOG]
         util.main(args)
         captured = capsys.readouterr()
         expected = self.get_expected_lines([i for i in range(10-NUM,10)])
@@ -86,7 +72,7 @@ class TestPositive:
         Verifies that NUM < -len(log) prints the entire log
         '''
         
-        args = ["--last", str(NUM), first_and_last_log]
+        args = ["--last", str(NUM), FIRST_AND_LAST_LOG]
         util.main(args)
         captured = capsys.readouterr()
         expected = self.get_expected_lines([i for i in range(10+NUM,10)])
@@ -106,7 +92,7 @@ class TestPositive:
         Tests -f with -l when there is no intersection
         '''
         
-        args = ["-f", first, "-l", last, first_and_last_log]
+        args = ["-f", first, "-l", last, FIRST_AND_LAST_LOG]
         util.main(args)
         captured = capsys.readouterr()
         assert captured.out == ""
@@ -126,7 +112,7 @@ class TestPositive:
         Tests -f and -l when there is an intersection
         '''
         
-        args = ["-f", first, "-l", last, first_and_last_log]
+        args = ["-f", first, "-l", last, FIRST_AND_LAST_LOG]
         util.main(args)
         captured = capsys.readouterr()
         expected = self.get_expected_lines(expected_idx)
@@ -150,7 +136,8 @@ class TestPositive:
         Tests util.calculate_bounds() with -f only
         '''
         
-        assert util.calculate_bounds(first, None, 10) == expected
+        assert (util.logParserUtil().calculate_bounds(first, None, 10) 
+            == expected)
 
     @pytest.mark.unit
     @pytest.mark.parametrize("last,expected", 
@@ -169,7 +156,8 @@ class TestPositive:
         Tests util.calculate_bounds() with -l only
         '''
         
-        assert util.calculate_bounds(None, last, 10) == expected
+        assert (util.logParserUtil().calculate_bounds(None, last, 10) 
+            == expected)
 
     @pytest.mark.unit
     @pytest.mark.parametrize("first,last,expected", 
@@ -190,7 +178,8 @@ class TestPositive:
         Tests util.calculate_bounds() with both -f and -l
         '''
         
-        assert util.calculate_bounds(first, last, 10) == expected
+        assert (util.logParserUtil().calculate_bounds(first, last, 10) 
+            == expected)
 
     @pytest.mark.unit
     def test_calculate_bounds_no_first_or_last(self): 
@@ -199,7 +188,8 @@ class TestPositive:
         '''
         
         length = 10
-        assert util.calculate_bounds(None, None, length) == [0, length]
+        assert (util.logParserUtil().calculate_bounds(None, None, length) 
+            == [0, length])
 
 
 class TestNegative: 
@@ -248,7 +238,7 @@ class TestNegative:
         Tests error handling when no value is given to -f or -l
         '''
         
-        args = [first_and_last_log, short_arg]
+        args = [FIRST_AND_LAST_LOG, short_arg]
         with pytest.raises(SystemExit): 
             util.main(args)
         captured = capsys.readouterr()
@@ -273,7 +263,7 @@ class TestNegative:
         Tests error handling when an invalid value is given to -f or -l
         '''
         
-        args = [short_arg, invalid_val, first_and_last_log]
+        args = [short_arg, invalid_val, FIRST_AND_LAST_LOG]
         with pytest.raises(SystemExit): 
             util.main(args)
         captured = capsys.readouterr()

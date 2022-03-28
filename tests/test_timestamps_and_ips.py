@@ -3,10 +3,10 @@ import re
 from .. import util
 
 
-general_log = "testLogs/test_general.log"
-timestamp_log = "testLogs/test_timestamp.log"
-ipv4_log = "testLogs/test_ipv4.log"
-ipv6_log = "testLogs/test_ipv6.log"
+GENERAL_LOG = "testLogs/test_general.log"
+TIMESTAMP_LOG = "testLogs/test_timestamp.log"
+IPV4_LOG = "testLogs/test_ipv4.log"
+IPV6_LOG = "testLogs/test_ipv6.log"
 
 
 class TestPositive: 
@@ -19,7 +19,7 @@ class TestPositive:
         Valid timestamps are of the form HH:MM:SS
         '''
         
-        args = ["--timestamp", timestamp_log]
+        args = ["--timestamp", TIMESTAMP_LOG]
         util.main(args)
         captured = capsys.readouterr()
         expected = (
@@ -40,7 +40,7 @@ class TestPositive:
             and leading 0s are optional
         '''
         
-        args = ["--ipv4", ipv4_log]
+        args = ["--ipv4", IPV4_LOG]
         util.main(args)
         captured = capsys.readouterr()
         expected = (
@@ -61,7 +61,7 @@ class TestPositive:
             and leading 0s are optional
         '''
         
-        args = ["--ipv6", ipv6_log]
+        args = ["--ipv6", IPV6_LOG]
         util.main(args)
         captured = capsys.readouterr()
         expected = (
@@ -81,7 +81,7 @@ class TestPositive:
         Tests -t in conjunction with -i
         '''
         
-        args = ["-t", "-i", general_log]
+        args = ["-t", "-i", GENERAL_LOG]
         util.main(args)
         captured = capsys.readouterr()
         expected = (
@@ -103,7 +103,7 @@ class TestPositive:
         Tests -t in conjunction with -I
         '''
         
-        args = ["-t", "-I", general_log]
+        args = ["-t", "-I", GENERAL_LOG]
         util.main(args)
         captured = capsys.readouterr()
         expected = (
@@ -127,7 +127,7 @@ class TestPositive:
         Tests -i in conjunction with -I
         '''
         
-        args = ["-i", "-I", general_log]
+        args = ["-i", "-I", GENERAL_LOG]
         util.main(args)
         captured = capsys.readouterr()
         expected = (
@@ -151,7 +151,7 @@ class TestPositive:
         Tests -t, -i, and -I together
         '''
         
-        args = ["-t", "-i", "-I", general_log]
+        args = ["-t", "-i", "-I", GENERAL_LOG]
         util.main(args)
         captured = capsys.readouterr()
         expected = (
@@ -171,7 +171,7 @@ class TestPositive:
         Tests -f, -t, -i, and -I together
         '''
         
-        args = ["-t", "-i", "-I", "-f", "13", general_log]
+        args = ["-t", "-i", "-I", "-f", "13", GENERAL_LOG]
         util.main(args)
         captured = capsys.readouterr()
         expected = (
@@ -189,7 +189,7 @@ class TestPositive:
         Tests -l, -t, -i, and -I together
         '''
         
-        args = ["-t", "-i", "-I", "-l", "13", general_log]
+        args = ["-t", "-i", "-I", "-l", "13", GENERAL_LOG]
         util.main(args)
         captured = capsys.readouterr()
         expected = (
@@ -208,7 +208,7 @@ class TestPositive:
         Tests -f, -l, -t, -i, and -I together
         '''
         
-        args = ["-t", "-i", "-I", "-f", "13", "-l", "13", general_log]
+        args = ["-t", "-i", "-I", "-f", "13", "-l", "13", GENERAL_LOG]
         util.main(args)
         captured = capsys.readouterr()
         expected = (
@@ -241,7 +241,7 @@ class TestPositive:
         
         # Verifies IPv6 highlighting
         matches = ipv6_re.finditer(input)
-        actual = util.highlight_ip_addresses(input, matches)
+        actual = util.logParserUtil().highlight_ip_addresses(input, matches)
         expected = (
             "119.243.4.69 \x1b[42m54ad:92fb:9c62:dcc1:39fb:d679:73f4:b804\x1b["
             "0m 88.133.63.210 17:59:00 \x1b[42m17c8:d4ea:1cb2:afeb:d2b9:945e:"
@@ -251,7 +251,7 @@ class TestPositive:
         
         # Verifies IPv4 highlighting
         matches = ipv4_re.finditer(input)
-        actual = util.highlight_ip_addresses(input, matches)
+        actual = util.logParserUtil().highlight_ip_addresses(input, matches)
         expected = (
             "\x1b[42m119.243.4.69\x1b[0m 54ad:92fb:9c62:dcc1:39fb:d679:73f4:"
             "b804 \x1b[42m88.133.63.210\x1b[0m 17:59:00 17c8:d4ea:1cb2:afeb:"
@@ -262,7 +262,7 @@ class TestPositive:
         # Verifies the highlighting of an already-highlighted string
         input = actual
         matches = ipv6_re.finditer(input)
-        actual = util.highlight_ip_addresses(input, matches)
+        actual = util.logParserUtil().highlight_ip_addresses(input, matches)
         expected = (
             "\x1b[42m119.243.4.69\x1b[0m \x1b[42m54ad:92fb:9c62:dcc1:39fb:"
             "d679:73f4:b804\x1b[0m \x1b[42m88.133.63.210\x1b[0m 17:59:00 \x1b"
@@ -278,7 +278,7 @@ class TestPositive:
         
         input = "I'm gonna take my horse to the old town road"
         idx = [4, 9, 31]
-        actual = [*util.split_by_idx(input,idx)]
+        actual = [*util.logParserUtil().split_by_idx(input,idx)]
         expected = ["I'm ", "gonna", " take my horse to the ", "old town road"]
         assert actual == expected
 
@@ -311,7 +311,7 @@ class TestNegative:
         '''
         
         extra_arg = 5
-        args = [timestamp_log, option, str(extra_arg)]
+        args = [TIMESTAMP_LOG, option, str(extra_arg)]
         with pytest.raises(SystemExit): 
             util.main(args)
         captured = capsys.readouterr()
