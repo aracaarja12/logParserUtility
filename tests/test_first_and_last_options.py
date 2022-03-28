@@ -6,8 +6,6 @@ FIRST_AND_LAST_LOG = "testLogs/test_first_and_last_options.log"
 
 
 class TestPositive: 
-
-
     @staticmethod
     def get_expected_lines(idx): 
         '''
@@ -193,8 +191,6 @@ class TestPositive:
 
 
 class TestNegative: 
-
-
     @staticmethod
     def get_expected_values_for_no_value_given(script_name, arg): 
         '''

@@ -15,8 +15,6 @@ IPV6_PAT = r"\b([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}\b"
 
 
 class logParserUtil: 
-
-
     def has_stdin(self): 
         return not sys.stdin.isatty()
 
@@ -30,13 +28,17 @@ class logParserUtil:
         
         # Create the argument parser and define arguments
         parser = argparse.ArgumentParser(
-            description="CLI application to help you parse logs of various kinds"
+            description=(
+                "CLI application to help you parse logs of various kinds"
+            )
         )
         parser.add_argument(
-            "-f", "--first", metavar="NUM", type=int, help="print first NUM lines"
+            "-f", "--first", metavar="NUM", type=int, 
+            help="print first NUM lines"
         )
         parser.add_argument(
-            "-l", "--last", metavar="NUM", type=int, help="print last NUM lines"
+            "-l", "--last", metavar="NUM", type=int, 
+            help="print last NUM lines"
         )
         parser.add_argument(
             "-t", "--timestamps", action="store_true", 
@@ -52,8 +54,8 @@ class logParserUtil:
         parser.add_argument(
             "-I", "--ipv6", action="store_true", 
             help=(
-                "print lines that contain an IPv6 address (standard notation), "
-                "matching IPs are highlighted"
+                "print lines that contain an IPv6 address (standard notation)"
+                ", matching IPs are highlighted"
             )
         )
         parser.add_argument(
@@ -77,8 +79,8 @@ class logParserUtil:
                 and all(not arg for arg in bool_args)): 
             parser.error(
                 (
-                    "At least one argument must be supplied as a filter. Try -h "
-                    "for help."
+                    "At least one argument must be supplied as a filter. Try "
+                    "-h for help."
                 )
             )
         
@@ -175,7 +177,7 @@ class logParserUtil:
         lines = args.file.readlines()
         args.file.close()
         
-        # Find the intersection of -f and -l, return if intersection DNE
+        # Find the intersection of -f and -l, ret. if intersection DNE
         boundaries = self.calculate_bounds(args.first, args.last, len(lines))
         if (boundaries is None 
                 or boundaries in [[0,0], [len(lines),len(lines)]]): 

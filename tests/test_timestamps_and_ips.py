@@ -10,8 +10,6 @@ IPV6_LOG = "testLogs/test_ipv6.log"
 
 
 class TestPositive: 
-
-
     @pytest.mark.functional
     def test_timestamp_only(self, capsys): 
         '''
@@ -284,8 +282,6 @@ class TestPositive:
 
 
 class TestNegative: 
-
-
     @staticmethod
     def get_expected_values_for_erroneous_args(script_name, extra_arg): 
         '''

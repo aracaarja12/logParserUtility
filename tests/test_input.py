@@ -35,8 +35,6 @@ def mock_stdin_isatty():
 
 
 class TestPositive: 
-
-
     @pytest.fixture(scope="class")
     def expected_values_reading_from_arg(self): 
         '''
@@ -146,8 +144,6 @@ class TestPositive:
 
 
 class TestNegative: 
-
-
     @pytest.fixture(scope="class")
     def expected_values_for_invalid_file(self, script_name): 
         '''
