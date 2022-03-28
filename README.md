@@ -1,4 +1,4 @@
-# Log Parsing Utility
+# Log Parser Utility
 
 This is a CLI application that helps you parse logs of various kinds. It prints the lines of a given log according to filters set by user-supplied command line arguments. The input log can be given as a command line argument or read from standard input. 
 
@@ -24,7 +24,6 @@ logParserUtility/
 - LICENSE
 - README.md
 - \_\_init\_\_.py
-- log.log
 - pytest.ini
 - requirements.txt
 
@@ -36,8 +35,7 @@ logParserUtility/
 | tests/test_input.py | tests pertaining to data input for tha application |
 | tests/test_timestamps_and_ips.py | tests pertaining to the --timestamps, --ipv4, and --ipv6 options |
 | LICENSE | an MIT license |
-| log.log | a small file to help you get familiar with util.py |
-| pytest.ini | a pytest file defining marks for the test suite |
+| pytest.ini | a pytest file defining markers for the test suite |
 | requirements.txt | a text file outlining dependencies |
 
 ## How to install and run
@@ -46,7 +44,7 @@ This application has two dependencies, colorama and pytest. You can either insta
 
 `pip install -r requirements.txt`
 
-A shebang is included in `util.py` to allow for its execution without explicitly calling `python` or `python3`. Usage follows: 
+`util.py` can be executed without explicitly calling `python`. Usage follows: 
 
 `./util.py [-h] [-f NUM] [-l NUM] [-t] [-i] [-I] [FILE]`
 
@@ -90,7 +88,7 @@ To run a specific module, give it as an argument to pytest:
 
 `pytest <module.py>`
 
-Presently, all three modules each contain two classes: TestPositive and TestNegative. To run the negative tests from the test_input module, you can run: 
+Presently, all three modules each contain two classes: TestPositive and TestNegative. These contain the module's positive tests and negative tests, respectively. To run the negative tests from the test_input module, you can run: 
 
 `pytest test_input.py::TestNegative`
 
