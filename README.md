@@ -67,12 +67,12 @@ When a filtering argument is used, only lines from the data source that satisfy 
 | Example | Outcome |
 | ------------- | ------------- |
 | ./util.py -h | \<prints help\> |
-| cat test_0.log \| ./util.py --first 10 | \<prints the first 10 lines of test_0.log\> |
-| ./util.py -l 5 test_1.log | \<prints the last 5 lines of test_1.log\> |
-| ./utils.py --timestamps test_2.log | \<prints any lines from test_2.log that contain a timestamp\> |
-| ./util.py --ipv4 test_3.log | \<prints any lines from test_3.log that contain an IPv4 address\> |
-| ./util.py --ipv6 test_4.log | \<prints any lines from test_4.log that contain an IPv6 address\> |
-| ./util.py --ipv4 --last 50 test_5.log | \<prints any of the last 50 lines from test_5.log that contain an IPv4 address\> |
+| cat *log_name.log* \| ./util.py --first 10 | \<prints the first 10 lines of *log_name.log*\> |
+| ./util.py -l 5 *log_name.log* | \<prints the last 5 lines of *log_name.log*\> |
+| ./utils.py --timestamps *log_name.log* | \<prints any lines from *log_name.log* that contain a timestamp\> |
+| ./util.py --ipv4 *log_name.log* | \<prints any lines from *log_name.log* that contain an IPv4 address\> |
+| ./util.py --ipv6 *log_name.log* | \<prints any lines from *log_name.log* that contain an IPv6 address\> |
+| ./util.py --ipv4 --last 50 *log_name.log* | \<prints any of the last 50 lines from *log_name.log* that contain an IPv4 address\> |
 
 ## Testing
 
