@@ -1,16 +1,19 @@
 import pytest
 from .. import util
 
+
 first_and_last_log = "testLogs/test_first_and_last_options.log"
 
+
 class TestPositive: 
+
 
     @staticmethod
     def get_expected_lines(idx): 
         '''
         Returns expected text based on a list of lines
         '''
-        
+        '''
         log_text = (
             "This is line 1/10\n",
             "This is line 2/10\n",
@@ -26,6 +29,8 @@ class TestPositive:
         return "".join(
             [log_text[i] for i in idx if i < len(log_text) and i >= 0]
         )
+        '''
+        return "".join([f"This is line {i+1}/10\n" for i in idx if 0 <= i < 10])
 
     @pytest.mark.functional
     @pytest.mark.parametrize("NUM", [0, 3, 10, 20])
@@ -196,7 +201,9 @@ class TestPositive:
         length = 10
         assert util.calculate_bounds(None, None, length) == [0, length]
 
+
 class TestNegative: 
+
 
     @staticmethod
     def get_expected_values_for_no_value_given(script_name, arg): 

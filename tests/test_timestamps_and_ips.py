@@ -2,12 +2,15 @@ import pytest
 import re
 from .. import util
 
+
 general_log = "testLogs/test_general.log"
 timestamp_log = "testLogs/test_timestamp.log"
 ipv4_log = "testLogs/test_ipv4.log"
 ipv6_log = "testLogs/test_ipv6.log"
 
+
 class TestPositive: 
+
 
     @pytest.mark.functional
     def test_timestamp_only(self, capsys): 
@@ -279,7 +282,9 @@ class TestPositive:
         expected = ["I'm ", "gonna", " take my horse to the ", "old town road"]
         assert actual == expected
 
+
 class TestNegative: 
+
 
     @staticmethod
     def get_expected_values_for_erroneous_args(script_name, extra_arg): 

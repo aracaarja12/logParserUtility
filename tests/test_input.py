@@ -3,8 +3,10 @@ import sys
 import io
 from .. import util
 
+
 log_from_arg = "testLogs/test_input_from_arg.log"
 invalid_log = "invalid.log"
+
 
 @pytest.fixture(scope="module")
 def expected_values_reading_from_stdin(): 
@@ -22,6 +24,7 @@ def expected_values_reading_from_stdin():
         ""
     )
 
+
 def mock_stdin_isatty(): 
     '''
     Mock for sys.stdin.isatty
@@ -30,8 +33,10 @@ def mock_stdin_isatty():
     
     return True
 
+
 class TestPositive: 
-    
+
+
     @pytest.fixture(scope="class")
     def expected_values_reading_from_arg(self): 
         '''
@@ -140,8 +145,10 @@ class TestPositive:
         assert captured.out == expected_stdout
         assert captured.err == expected_stderr
 
+
 class TestNegative: 
-    
+
+
     @pytest.fixture(scope="class")
     def expected_values_for_invalid_file(self, script_name): 
         '''
